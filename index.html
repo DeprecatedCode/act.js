@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="require.js"></script>
+        <script src="act.js"></script>
+        <script src="src/calc.js"></script>
+        <script src="src/ctrl.js"></script>
+        <script src="src/http.js"></script>
+        <script src="src/init.js"></script>
+        <script src="src/prop.js"></script>
+        <script src="src/scan.js"></script>
+        <script src="src/view.js"></script>
+        <script src="src/wait.js"></script>
+        <script>
+
+        require(['act'], function (act) {
+        
+            /**
+             * A controller
+             */
+            act.$ctrl('main', function (main) {
+               
+                /**
+                 * Set a scope variable
+                 */
+                main.name = act.$wait(1).then('Nate Ferrero');
+               
+                /**
+                 * Calculations are automatic
+                 */
+                main.formalName = act.$calc(function () {
+                    return "Mr. " + main.name;
+                });
+               
+                /**
+                 * For a controller to be rendered, it should
+                 * return a $view
+                 */
+                return act.$view(function (view) {
+                    view.node('p').text('Hello, ' + main.formalName);
+                    view.node('div').text(act.$ctrl.time);
+                });
+            });
+           
+            /**
+             * Another controller, just returning a value
+             */
+            act.$ctrl('time', function (time) {
+               
+                time.current = act.$tick(1).then(function () {
+                    return (new Date());
+                });
+               
+                return act.$calc(function () {
+                    return time.current.toString();
+                });
+            });
+           
+            act.$ctrl.main.$show(document.body);
+        });
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
