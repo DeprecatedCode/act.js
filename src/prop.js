@@ -58,7 +58,7 @@ define(['src/act'], function (act) {
                 val.then(function (result) {
                     self.set(result);
                 });
-                self.set();
+                self.set(val.$value);
                 return;
             }
             
@@ -72,6 +72,7 @@ define(['src/act'], function (act) {
                         val.$error = null;
                     }
                     catch (e) {
+                        self.set(undefined);
                         val.$error = e;
                     }
                 };

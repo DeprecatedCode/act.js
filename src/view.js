@@ -50,6 +50,13 @@ define(['src/act'], function (act) {
             this.$node.innerText = text;
         };
         
+        /**
+         * Set node html
+         */
+        proto.html = function (html) {
+            this.$node.innerHtml = html;
+        };
+        
     })(act);
     
     /*** @module.end ***/

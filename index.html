@@ -22,7 +22,7 @@
                 /**
                  * Set a scope variable
                  */
-                main.name = act.$wait(1).then('Nate Ferrero');
+                main.name = act.$wait(2).then('Bruce Wayne');
                
                 /**
                  * Calculations are automatic
@@ -39,7 +39,7 @@
                  */
                 main.view = act.$view(function (view) {
                     view.node('p').text('Hello, ' + main.formalName + '.');
-                    view.node('div').text('The current time is: ' + timeCtrl.text);
+                    view.node('div').text('The current time is: ' + (timeCtrl.text || "..."));
                 });
             });
            
@@ -50,7 +50,7 @@
                
                 time.current = act.$tick(1).then(function () {
                     return new Date();
-                });
+                }).fire();
                
                 time.text = act.$calc(function () {
                     return time.current.toString();
@@ -64,6 +64,14 @@
         });
 
         </script>
+        <style>
+            body {
+                font-family: sans-serif;
+                font-size: 120%;
+                padding: 0;
+                margin: 1em;
+            }
+        </style>
     </head>
     <body>
     </body>

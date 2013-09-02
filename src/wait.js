@@ -27,6 +27,7 @@ define(['src/act'], function (act) {
          */
         pkg.Async = function () {
             this.$then = [];
+            this.$value = undefined;
         };
         
         var proto = pkg.Async.prototype;
@@ -35,7 +36,7 @@ define(['src/act'], function (act) {
          * Set Async
          */
         proto.fire = function () {
-            var result = null;
+            var result;
             this.$then.forEach(function (then) {
                 if (typeof(then) === 'function') {
                     result = then(result);
@@ -44,6 +45,8 @@ define(['src/act'], function (act) {
                     result = then;
                 }
             });
+            this.$value = result;
+            return this;
         };
         
         /**
