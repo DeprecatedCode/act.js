@@ -1,17 +1,25 @@
-require(['act'], function (act) {
+define(['src/act'], function (act) {
     
-    /**
-     * Calc function
-     */
-    act.$calc = function (calc) {
-        return new act.Calculation(calc);
-    };
-
-    /**
-     * Calculation class
-     */
-    act.Calculation = function (calc) {
-        this.$run = calc;
-    };
+    /*** @module.start ***/
+    
+    (function (pkg) {
+    
+        /**
+         * Calc function
+         */
+        pkg.$calc = function (calc) {
+            return new pkg.Calculation(calc);
+        };
+    
+        /**
+         * Calculation class
+         */
+        pkg.Calculation = function (calc) {
+            this.$run = calc;
+        };
+        
+    })(act);
+    
+    /*** @module.end ***/
 
 });

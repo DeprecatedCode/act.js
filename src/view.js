@@ -1,47 +1,57 @@
-require(['act'], function (act) {
+define(['src/act'], function (act) {
     
-    /**
-     * View function
-     */
-    act.$view = function (view, type) {
-        return new act.View(view, type);
-    };
-
-    /**
-     * View class
-     */
-    act.View = function (view, type) {
-        this.$view = view;
-        this.$node = document.createElement(type || 'div');
-    };
+    /*** @module.start ***/
     
-    var proto = act.View.prototype;
+    (function (pkg) {
     
-    /**
-     * Show view
-     */
-    proto.$show = function (node) {
-        node.appendChild(this.$node);
-        this.$node.innerHTML = '';
-        if (typeof this.$view === 'function') {
-            this.$view(this);
-        }
-    };
+        /**
+         * View function
+         */
+        pkg.$view = function (view, type) {
+            return new pkg.View(view, type);
+        };
+    
+        /**
+         * View class
+         */
+        pkg.View = function (view, type) {
+            this.$view = view;
+            this.$node = document.createElement(type || 'div');
+        };
         
-    /**
-     * New node on node
-     */
-    proto.node = function (type) {
-        var n = new act.View(null, type);
-        this.$node.appendChild(n.$node);
-        return n;
-    };
+        var proto = pkg.View.prototype;
+        
+        /**
+         * Show view
+         */
+        proto.$show = proto.$run = function (node) {
+            if (node) {
+                node.appendChild(this.$node);
+            }
+            this.$node.innerHTML = '';
+            if (typeof this.$view === 'function') {
+                this.$view(this);
+            }
+        };
+            
+        /**
+         * New node on node
+         */
+        proto.node = function (type) {
+            var n = new pkg.View(null, type);
+            this.$node.appendChild(n.$node);
+            return n;
+        };
+        
+        /**
+         * Set node text
+         */
+        proto.text = function (text) {
+            this.$node.innerText = text;
+        };
+        
+    })(act);
     
-    /**
-     * Set node text
-     */
-    proto.text = function (text) {
-        this.$node.innerText = text;
-    };
+    /*** @module.end ***/
 
 });

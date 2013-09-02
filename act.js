@@ -1,3 +1,5 @@
 define('act', [], function () {
-    return {};
+    var act = {'bad': 'yeah'};
+    
+    return act;
 });
