@@ -5,7 +5,7 @@ Reactive, minimalist application development.
 
 ## Introduction
 
-Act.js is a set of tools to help streamline your JavaScript application. From small building blocks to flow management, Act.js does the tough work for you.
+Act.js is a set of tools to help streamline your JavaScript application. From small building blocks to flow management, Act.js does the tough work for you. It's old-fashioned in the sense that it does not rely on watchers or setters/getters for operation.
 
 ## $prop
 
@@ -13,6 +13,7 @@ Creates a property on an object. Example:
 
 ```js
 var person = {};
+
 var firstNameProp = act.$prop(person, 'firstName');
 firstNameProp.set('Bruce');
 
