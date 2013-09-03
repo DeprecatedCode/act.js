@@ -94,7 +94,7 @@ var coordsCtrl = act.$ctrl(function(coords) {
 
 [0, 1, 2, 3, 4, 5, 6].map(function (t) {
     setTimeout(function () {
-        console.log([coords.x, coords.y]);
+        console.log([coordsCtrl.x, coordsCtrl.y]);
     }, t * 1000);
 });
 
