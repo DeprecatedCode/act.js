@@ -27,6 +27,20 @@ person.$prop.firstName.set('Timothy');
 console.log(person.firstName); // Timothy
 ```
 
+## $scan
+
+It would become tedious to call `$prop` for every property on an object, so `$scan` will do that for you. Example:
+
+```
+var butterfly = {color: null, weight: null};
+
+act.$scan(butterfly);
+
+butterfly.$prop.color.set('orange');
+
+console.log(butterfly.color); // orange
+```
+
 ## $calc
 
 A calculated value, takes a single function to be processed when the scope changes. Returns a Calculation.
@@ -47,14 +61,14 @@ console.log(person.fullName); // Timothy Olyphant
 
 ## $ctrl
 
-The Control automatically does most of the above logic for you, in that you no longer need to call `$prop` to set up properties. 
+The Control automatically does most of the above logic for you, in that you no longer need to call `$prop` or even `$scan` to set up properties. 
 Your application logic should live in a Control. Here's an example:
 
 ```js
 var appCtrl = act.$ctrl(function (app) {
     app.name = "My App";
 
-    app.tagline = app.$calc(function () {
+    app.tagline = act.$calc(function () {
         return app.name + ' is the very best app.';
     });
 });
