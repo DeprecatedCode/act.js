@@ -40,6 +40,8 @@ act.$prop(person, 'fullName', act.$calc(function () {
 
 lastName.set('Olyphant');
 
+person.$prop.fullName.$run();
+
 console.log(person.fullName); // Timothy Olyphant
 ```
 
