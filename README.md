@@ -79,3 +79,24 @@ appCtrl.$prop.name.set('Bee Tracker');
 console.log(appCtrl.tagline); // Bee Tracker is the very best app.
 ```
 
+## $now / $wait / $tick
+
+Async values made easy. These methods both take a number of seconds to delay. The only difference is that `$tick` sets an interval, so the event will fire continuously. Examples:
+
+```js
+var coordsCtrl = act.$ctrl(function(coords) {
+
+    coords.x = act.$now(5).$wait(2).then(10).$wait(2).then(15);
+
+    coords.y = act.$now(100).$tick(1).then(function () { return coords.y + 100; });
+
+});
+
+[0, 1, 2, 3, 4, 5, 6].map(function (t) {
+    setTimeout(function () {
+        console.log([coords.x, coords.y]);
+    }, t * 1000);
+});
+
+//
+```
