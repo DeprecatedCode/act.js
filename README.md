@@ -81,7 +81,7 @@ console.log(appCtrl.tagline); // Bee Tracker is the very best app.
 
 ## $now / $wait / $tick
 
-Async values made easy. These methods both take a number of seconds to delay. The only difference is that `$tick` sets an interval, so the event will fire continuously. Examples:
+Async values made easy. These methods both take a number of seconds to delay. The only difference is that `$tick` sets an interval, so the event will fire continuously. Example:
 
 ```js
 var coordsCtrl = act.$ctrl(function(coords) {
