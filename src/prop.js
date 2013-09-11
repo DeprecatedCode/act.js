@@ -40,6 +40,7 @@ define(['src/act'], function (act) {
             this.$object = obj;
             this.$key = key;
             this.$then = [];
+            this.$onupdate = [];
             this.set(val || obj[key]);
         };
         
@@ -55,10 +56,11 @@ define(['src/act'], function (act) {
              * Async Properties
              */
             if (val instanceof pkg.Async) {
-                val.then(function (result) {
-                    self.set(result);
-                });
-                self.set(val.$value);
+                var fn = function () {
+                    self.set(val.$value);
+                };
+                fn();
+                val.$onupdate.push(fn);
                 return;
             }
             
@@ -69,11 +71,10 @@ define(['src/act'], function (act) {
                 this.$run = function () {
                     try {
                         self.set(val.$run());
-                        val.$error = null;
                     }
                     catch (e) {
                         self.set(undefined);
-                        val.$error = e;
+                        console && console.error && console.error(e.message || e);
                     }
                 };
                 return this.$run();
@@ -89,6 +90,10 @@ define(['src/act'], function (act) {
                     if (typeof(then) === 'function') {
                         then(val);
                     }
+                });
+                
+                this.$onupdate.forEach(function (fn) {
+                    typeof fn === 'function' && fn();
                 });
                 
                 if (this.$object.$run) {

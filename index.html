@@ -7,7 +7,7 @@
         /**
          * Scopes
          */
-        var mainCtrl, timeCtrl;
+        var mainCtrl, timeCtrl, counterCtrl;
 
         /**
          * We are requiring act.dev to use the non-compiled version
@@ -28,18 +28,17 @@
                  * Calculations are automatic
                  */
                 main.formalName = act.$calc(function () {
-                    if (!main.name) {
-                        return 'guest';
-                    }
-                    return "Mr. " + main.name;
+                    return main.name ? "Mr. " + main.name : 'guest';
                 });
                
                 /**
                  * Set up a view to be rendered later
                  */
                 main.view = act.$view(function (view) {
+                    view.node('h1').text('Act.js Demo Page');
                     view.node('p').text('Hello, ' + main.formalName + '.');
                     view.node('div').text('The current time is: ' + (timeCtrl.text || "..."));
+                    view.view(counterCtrl.view);
                 });
             });
            
@@ -56,11 +55,37 @@
                     return time.current.toString();
                 });
             });
+            
+            /**
+             * A controller that has a view and tracks clicks
+             */
+            counterCtrl = act.$ctrl(function (counter) {
+                
+                counter.count = 0;
+                
+                counter.countSquared = act.$calc(function () {
+                    return counter.count * counter.count;
+                });
+                
+                counter.view = act.$view(function (view) {
+                    view.node('h2').text('Counter');
+                    view.node('p').text('You have clicked ' + counter.count + ' times.');
+                    view.node('p').text('That number squared is: ' + counter.countSquared);
+                    view.node('button').text('Click Me').click(function () {
+                        counter.$prop.count.set(counter.count + 1);
+                    });
+                });
+            });
            
             /**
              * Render the main control view
              */
             mainCtrl.view.$show(document.body);
+            
+            /**
+             * Set up inter-controller dependencies
+             */
+            timeCtrl.$prop.text.$onupdate.push(mainCtrl.view.$run);
         });
 
         </script>

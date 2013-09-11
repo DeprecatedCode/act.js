@@ -17,6 +17,8 @@ define(['src/act'], function (act) {
         pkg.View = function (view, type) {
             this.$view = view;
             this.$node = document.createElement(type || 'div');
+            this.$run = this.$show.bind(this);
+            this.$initialized = false;
         };
         
         var proto = pkg.View.prototype;
@@ -24,14 +26,18 @@ define(['src/act'], function (act) {
         /**
          * Show view
          */
-        proto.$show = proto.$run = function (node) {
+        proto.$show = function (node, reinit) {
             if (node) {
                 node.appendChild(this.$node);
+            }
+            if (reinit === false && this.$initialized) {
+                return;
             }
             this.$node.innerHTML = '';
             if (typeof this.$view === 'function') {
                 this.$view(this);
             }
+            this.$initialized = true;
         };
             
         /**
@@ -44,10 +50,19 @@ define(['src/act'], function (act) {
         };
         
         /**
+         * Add view on node
+         */
+        proto.view = function (view) {
+            view.$show(this.$node, false);
+            return view;
+        };
+        
+        /**
          * Set node text
          */
         proto.text = function (text) {
             this.$node.innerText = text;
+            return this;
         };
         
         /**
@@ -55,6 +70,15 @@ define(['src/act'], function (act) {
          */
         proto.html = function (html) {
             this.$node.innerHtml = html;
+            return this;
+        };
+        
+        /**
+         * Set node click
+         */
+        proto.click = function (click) {
+            this.$node.addEventListener('click', click);
+            return this;
         };
         
     })(act);

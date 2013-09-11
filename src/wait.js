@@ -21,31 +21,93 @@ define(['src/act'], function (act) {
             async.$timeout = setTimeout(async.fire.bind(async), 1000 * delay);
             return async;
         };
+        
+        /**
+         * Now function
+         */
+        pkg.$now = function (value) {
+            var async = new pkg.Async(value);
+            async.$immediate = true;
+            return async;
+        };
     
         /**
          * Async class
          */
-        pkg.Async = function () {
+        pkg.Async = function (value) {
             this.$then = [];
-            this.$value = undefined;
+            this.$postfire = [];
+            this.$onupdate = [];
+            this.$value = value;
         };
         
         var proto = pkg.Async.prototype;
     
         /**
-         * Set Async
+         * Chain wait
+         */
+        proto.$wait = function (delay, timeoutFn) {
+            var async = new pkg.Async(this.$value);
+            var fn = function () {
+                async.$timeout = (timeoutFn || setTimeout)(async.fire.bind(async), 1000 * delay);
+            };
+            async.$parent = this;
+            this.$child = async;
+            this.$postfire.push(fn);
+            if (this.$immediate) {
+                this.propagate(this.$value);
+            }
+            return async;
+        };
+    
+        /**
+         * Chain tick
+         */
+        proto.$tick = function (delay) {
+            return this.$wait(delay, setInterval);
+        };
+        
+        /**
+         * Propagate value to child
+         */
+        proto.propagate = function (value, depth) {
+            
+            depth = depth || 0;
+
+            this.$value = value;
+
+            if (depth === 0) {
+                this.$postfire.forEach(function (fn) {
+                    typeof fn === 'function' && fn();
+                });
+            }
+            
+            this.$onupdate.forEach(function (fn) {
+                typeof fn === 'function' && fn();
+            });
+            
+            if (this.$child) {
+                this.$child.propagate(value, depth + 1);
+            }
+        };
+    
+        /**
+         * Fire Async
          */
         proto.fire = function () {
-            var result;
+            var value;
+            
             this.$then.forEach(function (then) {
                 if (typeof(then) === 'function') {
-                    result = then(result);
+                    value = then(value);
                 }
                 else {
-                    result = then;
+                    value = then;
                 }
             });
-            this.$value = result;
+
+            this.propagate(value);
+
             return this;
         };
         
@@ -54,6 +116,9 @@ define(['src/act'], function (act) {
          */
         proto.then = function (then) {
             this.$then.push(then);
+            if (this.$immediate && typeof then === 'function') {
+                this.$value = then(this.$value);
+            }
             return this;
         };
         
@@ -62,6 +127,9 @@ define(['src/act'], function (act) {
          */
         proto.cancel = function () {
             clearTimeout(this.$timeout);
+            if (this.$parent) {
+                this.$parent.cancel();
+            }
             return this;
         };
         
