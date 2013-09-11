@@ -95,8 +95,18 @@ var coordsCtrl = act.$ctrl(function(coords) {
 [0, 1, 2, 3, 4, 5, 6].map(function (t) {
     setTimeout(function () {
         console.log([coordsCtrl.x, coordsCtrl.y]);
-    }, t * 1000);
+    }, t * 1000 + 100);
 });
+```
 
-//
+The following will be printed to the console:
+
+```js
+[5, 100]
+[5, 200]
+[10, 300]
+[10, 400]
+[15, 500]
+[15, 600]
+[15, 700]
 ```
